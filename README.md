@@ -1,4 +1,4 @@
-# hawkek
+# Hawkek
 
 OWL validator. Grammar description:
 ```antlr

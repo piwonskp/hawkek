@@ -31,7 +31,7 @@ lexer (a:c)
     lexKeyword (word, rest) = getKeywordToken word : lexer rest
     getKeywordToken word
       | isKeyword word = (Keyword (read word :: KeywordType))
-      | otherwise = error "Unknown keyword"
+      | otherwise = error $ "\n\nUnknown keyword: " ++ show word
     lexIdentifier (word, rest) = Identifier word : lexer rest
 
 
@@ -67,6 +67,7 @@ optExprs :: [Token] -> ([Expr], [Token])
 optExprs = opt expr
 
 dropRParen (RP:ts) = ts
+dropRParen (_:ts) = error "\n\nRight parenthesis expected!"
 
 expr :: [Token] -> (Expr, [Token])
 expr (Identifier s:ts) = (E_Identifier s, ts)
@@ -120,7 +121,7 @@ parser (Keyword DisjointClasses:LP:ts) = t2 T_DisjointClasses ts
 parser (Keyword SameIndividual:LP:ts) = i2 T_SameIndividual ts
 parser (Keyword DifferentIndividuals:LP:ts) = i2 T_DifferentIndividuals ts
 parser (Keyword EquivalentClasses:LP:ts) = t2 T_EquivalentClasses ts
-parser t = error $ "Token: " ++ show t
+parser t = error $ "\n\nUnknown token: " ++ show t
 
 main = do
   print . (parser . lexer) =<< (readFile . head) =<< getArgs
